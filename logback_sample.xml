@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <conversionRule conversionWord="customLogger" converterClass="com.tibco.bw.extensions.logback.BWCustomConverter"/>
+    <conversionRule conversionWord="customLevel"  converterClass="com.tibco.bw.extensions.logback.BWLevelConverter"/>
+
+    <!-- *=============================================================* -->
+    <!-- *  APPENDER: File Appender                                    * -->
+    <!-- *=============================================================* -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="com.tibco.bw.extensions.logback.BWFileAppenderFilter"/>
+        <file>../log/bwappnode.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>../log/bwappnode%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %customLevel [%thread] %customLogger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- *=============================================================* -->
+    <!-- *  APPENDER: Application File Appender                        * -->
+    <!-- *=============================================================* -->
+    <appender name="APPLICATION-FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <filter class="com.tibco.bw.extensions.logback.BWAppFileAppenderFilter"/>
+        <discriminator class="com.tibco.bw.extensions.logback.BWLoggerNameDiscriminator"/>
+        <sift>
+            <appender name="FILE-${fileName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>../log/${fileName}.log</file>
+
+                <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                    <fileNamePattern>../log/${fileName}%i.log</fileNamePattern>
+                    <minIndex>1</minIndex>
+                    <maxIndex>10</maxIndex>
+                </rollingPolicy>
+
+                <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                    <maxFileSize>10MB</maxFileSize>
+                </triggeringPolicy>
+
+                <encoder>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %customLevel [%thread] %customLogger{36} - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <!-- *=============================================================* -->
+    <!-- *  CUSTOM APPENDER: Solace Messaging Appender                        * -->
+    <!-- *=============================================================* -->
+    <appender name="APPLICATION-MSG" class="com.abs.wfs.appender.WfsLogAppender">
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %customLevel [%thread] %customLogger{36} - %msg%n</pattern>
+        </encoder>
+
+        <url>A</url>
+        <port>B</port>
+        <vpn>C</vpn>
+        <password>D</password>
+        <destinationName>E</destinationName>
+    </appender>
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Application logger                    * -->
+    <!-- *=============================================================* -->
+    <!-- Do not modify this logger-->
+    <logger name="BWApp">
+        <level value="ERROR"/>
+    </logger>
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: Thor Framework loggers                              * -->
+    <!-- *=============================================================* -->
+    <logger name="com.tibco.thor.frwk">
+        <level value="INFO"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Framework loggers                     * -->
+    <!-- *=============================================================* -->
+    <logger name="com.tibco.bw.frwk">
+        <level value="WARN"/>
+    </logger>
+
+    <logger name="com.tibco.bw.frwk.engine">
+        <level value="INFO"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Engine loggers                        * -->
+    <!-- *=============================================================* -->
+    <logger name="com.tibco.bw.core">
+        <level value="WARN"/>
+    </logger>
+
+    <logger name="com.tibco.bx">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="com.tibco.pvm">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Palette and Activity loggers          * -->
+    <!-- *=============================================================* -->
+
+    <!-- Default Log activity logger -->
+    <logger name="com.tibco.bw.palette.generalactivities.Log" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="APPLICATION-FILE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="com.tibco.bw.palette">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Binding loggers                       * -->
+    <!-- *=============================================================* -->
+
+    <!-- SOAP Binding logger -->
+    <logger name="com.tibco.bw.binding.soap">
+        <level value="ERROR"/>
+    </logger>
+
+    <!-- REST Binding logger -->
+    <logger name="com.tibco.bw.binding.rest">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Shared Resource loggers               * -->
+    <!-- *=============================================================* -->
+    <logger name="com.tibco.bw.sharedresource">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Schema Cache loggers                  * -->
+    <!-- *=============================================================* -->
+    <logger name="com.tibco.bw.cache.runtime.xsd">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="com.tibco.bw.cache.runtime.wsdl">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Governance loggers                    * -->
+    <!-- *=============================================================* -->
+    <!-- Governance: Policy Director logger1 -->
+    <logger name="com.tibco.governance">
+        <level value="ERROR"/>
+    </logger>
+
+    <!-- Governance: Policy Director logger2 -->
+    <logger name="com.tibco.governance.pa.action.runtime.PolicyProperties">
+        <level value="ERROR"/>
+    </logger>
+
+    <!-- Governance: SPM logger1 -->
+    <logger name="com.tibco.governance.spm">
+        <level value="ERROR"/>
+    </logger>
+
+    <!-- Governance: SPM logger2 -->
+    <logger name="rta.client">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks Miscellaneous Loggers                 * -->
+    <!-- *=============================================================* -->
+    <logger name="com.tibco.bw.platformservices">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="com.tibco.bw.core.runtime.statistics">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: BusinessWorks statistics collection loggers         * -->
+    <!-- *=============================================================* -->
+    <!-- Activity Execution Statistics -->
+    <logger name="com.tibco.bw.statistics.activity" additivity="false">
+        <level value="INFO"/>
+    </logger>
+
+    <!-- Process Execution Statistics -->
+    <logger name="com.tibco.bw.statistics.processinstance" additivity="false">
+        <level value="INFO"/>
+    </logger>
+
+    <!-- Analyzer Execution Statistics -->
+    <logger name="com.tibco.bw.engine.analyzer.events" >
+        <level value="INFO"/>
+    </logger>
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: Other loggers                                       * -->
+    <!-- *=============================================================* -->
+    <logger name="org.apache.axis2">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="org.eclipse">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="org.quartz">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="org.apache.commons.httpclient.util.IdleConnectionHandler">
+        <level value="ERROR"/>
+    </logger>
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * LOGGER: User loggers.  User's custom loggers should be      * -->
+    <!-- *         configured in this section.                         * -->
+    <!-- *=============================================================* -->
+
+
+
+
+
+
+    <!-- *=============================================================* -->
+    <!-- * ROOT                                                        * -->
+    <!-- *=============================================================* -->
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="APPLICATION-MSG" />
+    </root>
+
+</configuration>
