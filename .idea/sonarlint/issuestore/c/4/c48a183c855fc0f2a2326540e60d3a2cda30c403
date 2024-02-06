@@ -1,0 +1,10 @@
+
+L	java:S106"+Replace this use of System.out by a logger.(ñ¥¡Øøÿÿÿÿ8 ÍÓÒ×1
+G	java:S106"+Replace this use of System.out by a logger.(—„ƒ´8Á€õÒ×1
+L	java:S106"+Replace this use of System.out by a logger.(úÀ¤³üÿÿÿÿ8Á€õÒ×1
+L	java:S106"+Replace this use of System.out by a logger.(Õ¯îÂşÿÿÿÿ8‚¦õÒ×1
+G	java:S106"+Replace this use of System.out by a logger.(‹£¸’8ƒ¦õÒ×1
+L	java:S106"+Replace this use of System.out by a logger.(€¥ú¦úÿÿÿÿ8ƒ¦õÒ×1
+L	java:S106 "+Replace this use of System.out by a logger.(ä¤Ü­ûÿÿÿÿ8ƒ¦õÒ×1
+\
+java:S1128":Remove this unused import 'ch.qos.logback.classic.Logger'.(™Ğğöøÿÿÿÿ8Á±‚Ó×1

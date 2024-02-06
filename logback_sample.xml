@@ -63,11 +63,12 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %customLevel [%thread] %customLogger{36} - %msg%n</pattern>
         </encoder>
 
-        <url>A</url>
-        <port>B</port>
-        <vpn>C</vpn>
-        <password>D</password>
-        <destinationName>E</destinationName>
+        <url>10.184.50.81</url>
+        <port>55555</port>
+        <vpn>MES_QA</vpn>
+        <username>default</username>
+        <password>admin</password>
+        <destinationName>SVM/WFS/LOG/MON</destinationName>
     </appender>
 
 
@@ -128,6 +129,7 @@
         <level value="DEBUG"/>
         <appender-ref ref="APPLICATION-FILE"/>
         <appender-ref ref="FILE"/>
+        <appender-ref ref="APPLICATION-MSG" />
     </logger>
 
     <logger name="com.tibco.bw.palette">
