@@ -268,7 +268,6 @@
     <!-- *=============================================================* -->
     <root level="INFO">
         <appender-ref ref="FILE" />
-        <appender-ref ref="APPLICATION-MSG" />
     </root>
 
 </configuration>

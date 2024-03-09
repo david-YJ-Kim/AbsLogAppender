@@ -4,6 +4,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.abs.wfs.appender.vo.SolaceConnectionInfoVo;
 import com.solacesystems.jcsmp.*;
 
+
 public class SolaceResourceInstance {
 
     private static SolaceResourceInstance instance;
@@ -49,11 +50,15 @@ public class SolaceResourceInstance {
             customHeader.putString(WfsAppenderConstant.logLevel, eventObject.getLevel().toString());
             customHeader.putString(WfsAppenderConstant.threadName, eventObject.getThreadName());
             customHeader.putLong(WfsAppenderConstant.timestamp, eventObject.getTimeStamp());
+
+            customHeader.putString(WfsAppenderConstant.classTrace, eventObject.getLoggerName());
+
         } catch (SDTException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+
 
         message.setProperties(customHeader);
         message.setText(eventObject.getMessage());
@@ -61,6 +66,7 @@ public class SolaceResourceInstance {
 
         if(destinationName.contains("_")){
             Queue queue = JCSMPFactory.onlyInstance().createQueue(destinationName);
+
             try {
                 SolaceResourceInstance.getInstance().getMessageProducer().send(message, queue);
             } catch (JCSMPException e) {
@@ -68,6 +74,7 @@ public class SolaceResourceInstance {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
+
         }else {
 
             Topic topic = JCSMPFactory.onlyInstance().createTopic(destinationName);
@@ -78,6 +85,7 @@ public class SolaceResourceInstance {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
+
         }
 
     }
@@ -92,6 +100,7 @@ public class SolaceResourceInstance {
 
     public void setProperties(SolaceConnectionInfoVo connectionVo){
         instance.properties = SolaceConnectionUtil.generateProperties(connectionVo);
+        System.out.println(instance.properties.toProperties());
     }
 
 
@@ -107,7 +116,19 @@ public class SolaceResourceInstance {
 
         instance.session = JCSMPFactory.onlyInstance().createSession(instance.properties);
         instance.session.connect();
-        instance.messageProducer = instance.session.getMessageProducer();
+        instance.messageProducer = instance.session.getMessageProducer(new JCSMPStreamingPublishCorrelatingEventHandler() {
+            @Override
+            public void responseReceivedEx(Object o) {
+
+                System.out.println(o.toString());
+            }
+
+            @Override
+            public void handleErrorEx(Object o, JCSMPException e, long l) {
+                e.printStackTrace();
+                System.out.println(o.toString());
+            }
+        });
 
     }
 }

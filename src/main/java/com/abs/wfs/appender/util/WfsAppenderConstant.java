@@ -6,4 +6,6 @@ public class WfsAppenderConstant {
     public static String threadName = "threadName";
 
     public static String timestamp = "timestamp";
+
+    public static String classTrace = "classTrace";
 }

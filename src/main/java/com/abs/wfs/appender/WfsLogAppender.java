@@ -3,14 +3,14 @@ package com.abs.wfs.appender;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.AppenderBase;
+import ch.qos.logback.core.AsyncAppenderBase;
 import com.abs.wfs.appender.util.SolaceConnectionUtil;
 import com.abs.wfs.appender.util.SolaceResourceInstance;
 import com.abs.wfs.appender.util.WfsAppenderConstant;
 import com.abs.wfs.appender.vo.SolaceConnectionInfoVo;
 import com.solacesystems.jcsmp.*;
 
-public class WfsLogAppender extends AppenderBase<ILoggingEvent> {
+public class WfsLogAppender extends AsyncAppenderBase<ILoggingEvent> {
 
 
 
@@ -27,19 +27,10 @@ public class WfsLogAppender extends AppenderBase<ILoggingEvent> {
 
     protected void append(ILoggingEvent eventObject) {
 
-        System.out.print("========================================");
-        System.out.println("url : "+ url);
-        System.out.println("port : "+ port);
-        System.out.println("vpn : "+ vpn);
-        System.out.println("password : "+ password);
-        System.out.println("destinationName : "+ destinationName);
-
-        System.out.println(eventObject.getMessage());
-
         if(SolaceResourceInstance.getInstance().getConnectionVo() == null){
             SolaceConnectionInfoVo vo = new SolaceConnectionInfoVo();
             vo.setHost(url + ":" + port);
-            vo.setUserName(username);
+            vo.setUserName(username + "_" + System.currentTimeMillis());
             vo.setVpnName(vpn);
             vo.setPassword(password);
             SolaceResourceInstance.getInstance().setConnectionVo(vo);
@@ -47,7 +38,14 @@ public class WfsLogAppender extends AppenderBase<ILoggingEvent> {
         }
 
 
-        SolaceResourceInstance.getInstance().doAppend(destinationName, eventObject);
+
+        try{
+
+          SolaceResourceInstance.getInstance().doAppend(destinationName, eventObject);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
 
 
 
@@ -55,13 +53,6 @@ public class WfsLogAppender extends AppenderBase<ILoggingEvent> {
 
 
 
-//    public PatternLayoutEncoder getEncoder() {
-//        return encoder;
-//    }
-//
-//    public void setEncoder(PatternLayoutEncoder encoder) {
-//        this.encoder = encoder;
-//    }
     public String getUrl() {
         return url;
     }
